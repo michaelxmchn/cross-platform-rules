@@ -1,77 +1,76 @@
 # 跨平台规则库 (Cross-Platform Rules Library)
 
-## 目的
-
 统一管理多通讯平台（Discord、微信、飞书等）的自动化规则。
 
-## 架构
+## 📡 部署状态
+
+| 电脑 | IP | 状态 |
+|------|-----|------|
+| 旧电脑 | 192.168.1.17 | ✅ 已部署 |
+| 新电脑 | 192.168.1.67 | ✅ 已部署 |
+
+## 🏷️ GitHub 仓库
+
+https://github.com/michaelxmchn/cross-platform-rules
+
+## 📁 项目结构
 
 ```
 rules/
 ├── README.md              # 本说明
+├── QUICK_START.md         # 快速开始
 ├── base/
-│   ├── rule_engine.py     # 规则引擎（核心）
-│   └── platform.py        # 平台适配器抽象
+│   ├── platform.py        # 平台适配器抽象
+│   └── rule_engine.py     # 规则引擎
 ├── platforms/
-│   ├── discord.py         # Discord 适配器
-│   ├── wechat.py          # 微信适配器
-│   └── feishu.py          # 飞书适配器
+│   ├── discord.py         # ✅ Discord 适配器
+│   ├── wechat.py          # ⏳ 待开发
+│   └── feishu.py          # ⏳ 待开发
 └── rules/
-    └── at_reply.py        # @回复规则（通用）
+    └── at_reply.py         # ✅ @回复规则
 ```
 
-## 规则工作流程
+## 🚀 快速使用
 
-```
-接收消息
-  ↓
-平台适配器解析（提取 sender, target, content）
-  ↓
-规则引擎匹配
-  ↓
-执行规则逻辑
-  ↓
-发送回复
+```bash
+# 克隆到新电脑
+git clone https://github.com/michaelxmchn/cross-platform-rules ~/projects/rules
+
+# 测试
+cd ~/projects/rules
+python3 test_simple.py
 ```
 
-## 使用方法
+## 📋 规则列表
 
-```python
-from base.rule_engine import RuleEngine
-from platforms.discord import DiscordAdapter
+| 规则 | 描述 | 平台 | 状态 |
+|------|------|------|------|
+| at_reply | @回复规则 | Discord, WeChat, Feishu | ✅ |
 
-# 初始化
-engine = RuleEngine()
-adapter = DiscordAdapter()
+## 🆕 添加新电脑
 
-# 处理消息
-result = engine.process(adapter.parse(message))
+```bash
+# SSH 连接新电脑
+ssh user@新电脑IP
+
+# 克隆规则库
+git clone https://github.com/michaelxmchn/cross-platform-rules ~/projects/rules
+
+# 运行测试
+cd ~/projects/rules
+python3 test_simple.py
 ```
 
-## 规则接口
+## 🎯 计划
 
-```python
-class BaseRule:
-    name: str           # 规则名称
-    platforms: List[str]  # 支持的平台
-    
-    async def match(self, context: dict) -> bool:
-        """匹配条件"""
-        pass
-    
-    async def execute(self, context: dict) -> str:
-        """执行动作，返回回复内容"""
-        pass
-```
+- [x] Discord 适配器
+- [x] @ 回复规则
+- [ ] 微信适配器
+- [ ] 飞书适配器
+- [ ] 消息转发规则
+- [ ] 定时任务规则
 
-## 规则列表
+---
 
-| 规则 | 描述 | 平台 |
-|------|------|------|
-| at_reply | @回复规则 | Discord, WeChat, Feishu |
-
-## 添加新规则
-
-1. 在 `rules/` 目录创建 `{rule_name}.py`
-2. 继承 `BaseRule` 类
-3. 在 `rule_engine.py` 中注册
+**维护者**: @michaelxmchn  
+**License**: MIT
